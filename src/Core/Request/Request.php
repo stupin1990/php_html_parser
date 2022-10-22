@@ -1,6 +1,6 @@
 <?php
 
-namespace Src;
+namespace HtmlParser;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -26,10 +26,14 @@ class Request
         $this->client = new Client;
     }
 
-    protected function get() : string
+    protected function request($method = 'GET', $params = []) : string
     {
+        if (!isset($params['connect_timeout'])) {
+            $params['connect_timeout'] = 10;
+        }
+
         try {
-            $res = $this->client->request('GET', $this->url, ['connect_timeout' => 10]);
+            $res = $this->client->request($method, $this->url, $params);
         } catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() == 404) {
                 throw new \Exception('Page not found!');

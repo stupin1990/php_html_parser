@@ -5,7 +5,7 @@ namespace Src;
 require_once __DIR__ . '/UrlContent.php';
 require_once __DIR__ . '/Parser.php';
 
-class HttpParser
+class HtmlParser
 {
     protected string $url;
     protected string $content;

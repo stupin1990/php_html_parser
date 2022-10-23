@@ -1,6 +1,6 @@
 <?php
 
-namespace HtmlParser;
+namespace Src\Core\Parser;
 
 class Parser
 {

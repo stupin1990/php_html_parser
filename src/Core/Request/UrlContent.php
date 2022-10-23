@@ -1,8 +1,6 @@
 <?php
 
-namespace HtmlParser;
-
-require_once __DIR__ . '/Request.php';
+namespace Src\Core\Request;
 
 class UrlContent extends Request
 {

@@ -1,9 +1,8 @@
 <?php
 
-namespace HtmlParser;
+namespace Src\Core\Parser;
 
-require_once __DIR__ . '/../Request/UrlContent.php';
-require_once __DIR__ . '/Parser.php';
+use Src\Core\Request\UrlContent;
 
 class HtmlParser
 {

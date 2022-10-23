@@ -1,6 +1,6 @@
 <?php
 
-namespace HtmlParser;
+namespace Src\Core\Request;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;

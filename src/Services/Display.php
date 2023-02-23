@@ -2,9 +2,13 @@
 
 namespace Src\Services;
 
-class Display
+final class Display
 {
-    public static function printTagsTable($arr = []) : void
+    /**
+     * Print key, value data in table
+     * @param array $arr - array with key, value pairs
+     */
+    public static function printKeysValuesTable($arr = []) : void
     {
         $sizes_ar = array_map(function($item) {
             return strlen((string)$item);

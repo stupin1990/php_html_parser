@@ -2,10 +2,13 @@
 
 namespace Src\Core\Parser;
 
-class Parser
+class Parser implements ParserInterface
 {
     protected string $content;
 
+    /**
+     * @param string $content - string with html tags
+     */
     public function __construct(string $content = '')
     {
         if (!$content) {

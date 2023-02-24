@@ -12,7 +12,7 @@ class Parser implements ParserInterface
     public function __construct(string $content = '')
     {
         if (!$content) {
-            throw new \Exception('Undefined content!');
+            die('Undefined content!');
         }
 
         $this->content = $content;

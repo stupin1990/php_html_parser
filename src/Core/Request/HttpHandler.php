@@ -13,7 +13,6 @@ class HttpHandler implements HttpHandlerInterface
     protected string $method;
     protected array $params;
     protected Response $response;
-    protected Validator $validator;
 
     /**
      * @param string $url - url address string
@@ -37,7 +36,6 @@ class HttpHandler implements HttpHandlerInterface
         $this->params = $params;
 
         $this->response = static::request($this->url, $this->method, $this->params);
-        $this->validator = new Validator($this->response);
     }
 
     public static function request(string $url, string $method = 'GET', array $params = []) : Response
@@ -69,14 +67,14 @@ class HttpHandler implements HttpHandlerInterface
 
     public function getContent() : string
     {
-        $this->validator->validateTypeOrDie('text');
+        Validator::validateOrDie($this->response, 'text');
 
         return $this->response->getBody()->getContents();
     }
 
     public function getJson() : array
     {
-        $this->validator->validateTypeOrDie('json');
+        Validator::validateOrDie($this->response, 'json');
 
         $content = json_decode($this->response->getBody()->getContents(), true);
         return $content;
@@ -84,7 +82,7 @@ class HttpHandler implements HttpHandlerInterface
 
     public function getXml() : SimpleXMLElement
     {
-        $this->validator->validateTypeOrDie('xml');
+        Validator::validateOrDie($this->response, 'xml');
 
         $content = simplexml_load_string($this->response->getBody()->getContents());
         return $content;

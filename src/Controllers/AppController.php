@@ -9,7 +9,7 @@ use Src\Services\Display;
 /**
  * Main Interface for html parser
  */
-final class IndexController
+final class AppController
 {
     private string $url; // url address string
 
@@ -29,15 +29,23 @@ final class IndexController
     }
 
     /**
-     * Get html content from url and shows amount of its tags in console
+     * Get amount of html tags from url
+     * @return array [tag => amount]
      */
-    public function showAmountOfTagsInUrl()
+    public function getTagsFromUrl() : array
     {
         $http = new HttpHandler($this->url);
         $content = $http->getContent();
 
         $parser = new Parser($content);
         $tags = $parser->findTags();
+
+        return $tags;
+    }
+
+    public function exec()
+    {
+        $tags = $this->getTagsFromUrl();
 
         Display::printKeysValuesTable($tags);
     }

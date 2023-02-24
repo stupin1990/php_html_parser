@@ -5,13 +5,15 @@ namespace Src\Core\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
+use Src\Core\Validator\ResponseValidator as Validator;
 
 class HttpHandler implements HttpHandlerInterface
 {
     protected string $url;
     protected string $method;
     protected array $params;
-    protected $responce;
+    protected Response $response;
+    protected Validator $validator;
 
     /**
      * @param string $url - url address string
@@ -27,14 +29,15 @@ class HttpHandler implements HttpHandlerInterface
         preg_match("/(http[s]{0,1}\:\/\/.+)/", $url, $matches);
 
         if (!count($matches)) {
-            throw new \Exception('Invalid url format, should be: http[s]://example.com');
+            die('Invalid url format, should be: http[s]://example.com');
         }
 
         $this->url = $url;
         $this->method = $method;
         $this->params = $params;
 
-        $this->responce = static::request($this->url, $this->method, $this->params);
+        $this->response = static::request($this->url, $this->method, $this->params);
+        $this->validator = new Validator($this->response);
     }
 
     public static function request(string $url, string $method = 'GET', array $params = []) : Response
@@ -49,7 +52,7 @@ class HttpHandler implements HttpHandlerInterface
             $res = $client->request($method, $url, $params);
         } catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() == 404) {
-                throw new \Exception('Page not found!');
+                die('Page not found!');
             }
             throw new \Exception($e->getMessage());
         } catch (\Exception $e) {
@@ -59,51 +62,32 @@ class HttpHandler implements HttpHandlerInterface
         return $res;
     }
 
-    public function getResponce() : Response
+    public function getResponse() : Response
     {
-        return $this->responce;
+        return $this->response;
     }
 
     public function getContent() : string
     {
-        $content_type = $this->responce->getHeader('Content-Type')[0];
-        if (strpos($content_type, 'text/html') === false) {
-            throw new \Exception('Content is not a text! (' . $content_type . ')');
-        }
+        $this->validator->validateTypeOrDie('text');
 
-       return $this->responce->getBody()->getContents();
+        return $this->response->getBody()->getContents();
     }
 
     public function getJson() : array
     {
-        $content_type = $this->responce->getHeader('Content-Type')[0];
-        if (strpos($content_type, '/json') === false) {
-            throw new \Exception('Content is not a json (' . $content_type . ')');
-        }
+        $this->validator->validateTypeOrDie('json');
 
-        try {
-            $content = json_decode($this->responce->getBody()->getContents(), true);
-            return $content;
-        }
-        catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
+        $content = json_decode($this->response->getBody()->getContents(), true);
+        return $content;
     }
 
     public function getXml() : SimpleXMLElement
     {
-        $content_type = $this->responce->getHeader('Content-Type')[0];
-        if (strpos($content_type, '/xml') === false) {
-            throw new \Exception('Content is not an xml! (' . $content_type . ')');
-        }
+        $this->validator->validateTypeOrDie('xml');
 
-        try {
-            $content = simplexml_load_string($this->responce->getBody()->getContents());
-            return $content;
-        }
-        catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
+        $content = simplexml_load_string($this->response->getBody()->getContents());
+        return $content;
     }
 
 }

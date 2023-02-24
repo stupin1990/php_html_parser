@@ -2,9 +2,9 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Src\Controllers\IndexController;
+use Src\Controllers\AppController;
 
 $url = $argv[1] ?? '';
 
-$parser = new IndexController($url);
-$parser->showAmountOfTagsInUrl();
+$app = new AppController($url);
+$app->exec();

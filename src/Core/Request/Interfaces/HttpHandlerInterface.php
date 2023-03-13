@@ -1,8 +1,9 @@
 <?php
 
-namespace Src\Core\Request;
+namespace Src\Core\Request\Interfaces;
 
 use GuzzleHttp\Psr7\Response;
+use Src\Core\Request\ResponseDTO;
 
 interface HttpHandlerInterface
 {
@@ -19,7 +20,7 @@ interface HttpHandlerInterface
      * Get Response object
      * @return GuzzleHttp\Psr7\Response
      */
-    public function getResponse() : Response;
+    public function getResponse() : ResponseDTO;
 
     /**
      * Get text data from response
@@ -37,5 +38,5 @@ interface HttpHandlerInterface
      * Get xml data from response
      * @return SimpleXMLElement object
      */
-    public function getXml() : SimpleXMLElement;
+    public function getXml() : \SimpleXMLElement;
 }

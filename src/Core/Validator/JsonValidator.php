@@ -8,6 +8,6 @@ class JsonValidator extends BaseValidator
 
     public function validate() : bool
     {
-        return strpos($this->content_type, 'application/json') !== false;
+        return strpos($this->response->content_type, 'application/json') !== false;
     }
 }

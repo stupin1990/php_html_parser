@@ -2,19 +2,17 @@
 
 namespace Src\Core\Validator;
 
-use GuzzleHttp\Psr7\Response;
+use Src\Core\Request\ResponseDTO;
 
-abstract class BaseValidator implements validatorInterface
+abstract class BaseValidator implements Interfaces\ValidatorInterface
 {
-    private Response $response;
-    protected string $content_type;
+    protected ResponseDTO $response;
     protected string $error_message = '';
 
-    public function __construct(Response $response)
+    public function __construct(ResponseDTO $response)
     {
         $this->response = $response;
-        $this->content_type = $this->response->getHeader('Content-Type')[0];
-        $this->error_message = str_replace('{content_type}', $this->content_type, $this->error_message);
+        $this->error_message = str_replace('{content_type}', $this->response->content_type, $this->error_message);
     }
 
     public function getErrorMessage() : string

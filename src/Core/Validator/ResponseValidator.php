@@ -1,39 +1,16 @@
 <?php
 
 namespace Src\Core\Validator;
-use GuzzleHttp\Psr7\Response;
+use Src\Core\Request\ResponseDTO;
 
 /**
- * Main validation static factory
+ * Main validation class
  */
-class ResponseValidator implements ResponseValidatorInterface
+class ResponseValidator implements Interfaces\ResponseValidatorInterface
 {
-    public static function getValidator(Response $response, string $type) : BaseValidator
+    public static function validate(ResponseDTO $response, string $type) : void
     {
-        switch ($type) {
-            case 'text':
-                return new TextValidator($response);
-                break;
-            case 'json':
-                return new JsonValidator($response);
-                break;
-            case 'xml':
-                return new XmlValidator($response);
-                break;
-            default:
-                throw new \Exception('Undefined validator!');
-                break;
-        }
-    }
-
-    public static function validate(Response $response, string $type) : bool
-    {
-        return static::getValidator($response, $type)->validate();
-    }
-
-    public static function validateOrDie(Response $response, string $type)
-    {
-        $validator = static::getValidator($response, $type);
+        $validator = ValidatorFactory::create($response, $type);
 
         if (!$validator->validate()) {
             die($validator->getErrorMessage());

@@ -8,6 +8,6 @@ class XmlValidator extends BaseValidator
 
     public function validate() : bool
     {
-        return strpos($this->content_type, 'application/xml') !== false;
+        return strpos($this->response->content_type, 'application/xml') !== false;
     }
 }

@@ -1,0 +1,7 @@
+<phpunit>
+  <testsuites>
+    <testsuite name="parser">
+      <file>Src/Tests/ParserTest.php</file>
+    </testsuite>
+  </testsuites>
+</phpunit>

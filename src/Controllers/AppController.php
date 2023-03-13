@@ -18,16 +18,6 @@ final class AppController
         $this->url = $url;
     }
 
-    public function setUrl(string $url)
-    {
-        $this->url = $url;
-    }
-
-    public function getUrl() : string
-    {
-        return $this->url;
-    }
-
     /**
      * Get amount of html tags from url
      * @return array [tag => amount]

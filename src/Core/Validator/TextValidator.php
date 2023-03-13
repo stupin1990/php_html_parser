@@ -8,6 +8,6 @@ class TextValidator extends BaseValidator
 
     public function validate() : bool
     {
-        return strpos($this->content_type, 'text/html') !== false;
+        return strpos($this->response->content_type, 'text/html') !== false;
     }
 }

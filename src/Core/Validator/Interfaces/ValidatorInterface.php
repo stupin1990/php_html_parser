@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Core\Validator;
+namespace Src\Core\Validator\Interfaces;
 
 interface validatorInterface
 {

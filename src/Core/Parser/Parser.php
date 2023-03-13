@@ -2,7 +2,7 @@
 
 namespace Src\Core\Parser;
 
-class Parser implements ParserInterface
+class Parser implements Interfaces\ParserInterface
 {
     protected string $content;
 

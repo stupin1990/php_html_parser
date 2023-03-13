@@ -5,22 +5,27 @@ namespace Src\Core\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
-use Src\Core\Validator\ResponseValidator as Validator;
+use Src\Core\Validator\ResponseValidator;
 
-class HttpHandler implements HttpHandlerInterface
+class HttpHandler implements Interfaces\HttpHandlerInterface
 {
     protected string $url;
     protected string $method;
     protected array $params;
-    protected Response $response;
+    protected ResponseDTO $responseDTO;
 
     /**
      * @param string $url - url address string
      * @param string $method - request type GET, POST...
      * @param array $params - additional request params
      */
-    public function __construct(string $url = '', string $method = 'GET', array $params = [])
+    public function __construct(string $url = '', string $method = 'GET', array $params = [], ResponseDTO $dto = null)
     {
+        if (!is_null($dto)) {
+            $this->responseDTO = $dto;
+            return;
+        }
+
         if (!$url) {
             throw new \Exception('Undefined url!');
         }
@@ -35,7 +40,8 @@ class HttpHandler implements HttpHandlerInterface
         $this->method = $method;
         $this->params = $params;
 
-        $this->response = static::request($this->url, $this->method, $this->params);
+        $response = static::request($this->url, $this->method, $this->params);
+        $this->responseDTO = new responseDTO($response);
     }
 
     public static function request(string $url, string $method = 'GET', array $params = []) : Response
@@ -60,32 +66,30 @@ class HttpHandler implements HttpHandlerInterface
         return $res;
     }
 
-    public function getResponse() : Response
+    public function getResponse() : ResponseDTO
     {
-        return $this->response;
+        return $this->responseDTO;
     }
 
     public function getContent() : string
     {
-        Validator::validateOrDie($this->response, 'text');
+        ResponseValidator::validate($this->getResponse(), 'text');
 
-        return $this->response->getBody()->getContents();
+        return $this->getResponse()->body;
     }
 
     public function getJson() : array
     {
-        Validator::validateOrDie($this->response, 'json');
+        ResponseValidator::validate($this->getResponse(), 'json');
 
-        $content = json_decode($this->response->getBody()->getContents(), true);
-        return $content;
+        return json_decode($this->getResponse()->body, true);;
     }
 
-    public function getXml() : SimpleXMLElement
+    public function getXml() : \SimpleXMLElement
     {
-        Validator::validateOrDie($this->response, 'xml');
+        ResponseValidator::validateXml($this->getResponse(), 'xml');
 
-        $content = simplexml_load_string($this->response->getBody()->getContents());
-        return $content;
+        return simplexml_load_string($this->getResponse()->body);
     }
 
 }

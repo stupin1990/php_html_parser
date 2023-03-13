@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Core\Parser;
+namespace Src\Core\Parser\Interfaces;
 
 
 interface ParserInterface
